@@ -55,7 +55,7 @@ namespace Consolonia.Core.Infrastructure
             Console.MouseEvent += ConsoleOnMouseEvent;
             Console.FocusEvent += ConsoleOnFocusEvent;
             Handle = null!;
-            _accessKeysAlwaysOn = !Console.SupportsAltSolo;
+            _accessKeysAlwaysOn = !Console.Capabilities.HasFlag(ConsoleCapabilities.SupportsAltSolo);
             if (_accessKeysAlwaysOn)
                 _accessKeysAlwaysOnDisposable =
                     AccessText.ShowAccessKeyProperty.Changed.SubscribeAction(OnShowAccessKeyPropertyChanged);
@@ -482,7 +482,7 @@ namespace Consolonia.Core.Infrastructure
         {
             return _cursorType switch
             {
-                StandardCursorType.Arrow => string.Empty,
+                StandardCursorType.Arrow => GetDefaultCursor(),
                 StandardCursorType.Cross => "+",
                 StandardCursorType.Hand => "@",
                 StandardCursorType.Help => "?",
@@ -497,10 +497,10 @@ namespace Consolonia.Core.Infrastructure
                 StandardCursorType.BottomSide => "v",
                 StandardCursorType.LeftSide => "<",
                 StandardCursorType.RightSide => ">",
-                StandardCursorType.TopLeftCorner => @"\\",
+                StandardCursorType.TopLeftCorner => @"\",
                 StandardCursorType.TopRightCorner => "/",
                 StandardCursorType.BottomLeftCorner => "/",
-                StandardCursorType.BottomRightCorner => @"\\",
+                StandardCursorType.BottomRightCorner => @"\",
                 StandardCursorType.DragCopy => "+",
                 StandardCursorType.DragLink => "@",
                 StandardCursorType.DragMove => ">",
@@ -508,6 +508,15 @@ namespace Consolonia.Core.Infrastructure
                 _ => " "
             };
         }
+
+        private string GetDefaultCursor()
+        {
+            if (Console.Capabilities.HasFlag(ConsoleCapabilities.SupportsMouseMove) &&
+                !Console.Capabilities.HasFlag(ConsoleCapabilities.SupportsMouseCursor))
+                return " ";
+            return string.Empty;
+        }
+
 
         protected virtual void OnCursorChanged(ConsoleCursor obj)
         {

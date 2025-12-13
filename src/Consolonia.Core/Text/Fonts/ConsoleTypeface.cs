@@ -8,7 +8,6 @@ using Consolonia.Controls;
 using Consolonia.Core.Drawing;
 using Consolonia.Core.Drawing.PixelBufferImplementation;
 using Consolonia.Core.Helpers;
-using Consolonia.Core.Infrastructure;
 
 namespace Consolonia.Core.Text.Fonts
 {
@@ -157,9 +156,10 @@ namespace Consolonia.Core.Text.Fonts
                 throw new ArgumentException("TextShaperOptions.Typeface must be of type ConsoleTypeface.",
                     nameof(options));
 
-            var console = AvaloniaLocator.Current.GetRequiredService<IConsoleOutput>();
+            var console = AvaloniaLocator.Current.GetRequiredService<IConsoleCapabilities>();
 
-            IReadOnlyList<Grapheme> graphemes = Grapheme.Parse(text.Span.ToString(), console.SupportsComplexEmoji);
+            IReadOnlyList<Grapheme> graphemes = Grapheme.Parse(text.Span.ToString(),
+                console.Capabilities.HasFlag(ConsoleCapabilities.SupportsComplexEmoji));
 
             var shapedBuffer = new ShapedBuffer(text, graphemes.Count,
                 this, 1, 0 /*todo: must be 1 for right to left?*/);

@@ -78,10 +78,6 @@ namespace Consolonia.Core.Infrastructure
 
         #region IConsoleInput
 
-        public abstract bool SupportsMouse { get; }
-
-        public abstract bool SupportsMouseMove { get; }
-
         public event Action<Key, char, RawInputModifiers, bool, ulong, bool> KeyEvent;
         public event Action<RawPointerEventType, Point, Vector?, RawInputModifiers> MouseEvent;
         public event Action<bool> FocusEvent;
@@ -128,9 +124,8 @@ namespace Consolonia.Core.Infrastructure
             }
         }
 
-        public virtual bool SupportsComplexEmoji => _consoleOutput.SupportsComplexEmoji;
 
-        public abstract bool SupportsAltSolo { get; }
+        public ConsoleCapabilities Capabilities { get; protected set; }
 
         public event Action Resized;
 
@@ -152,6 +147,7 @@ namespace Consolonia.Core.Infrastructure
         public virtual void PrepareConsole()
         {
             _consoleOutput.PrepareConsole();
+            Capabilities |= _consoleOutput.Capabilities;
         }
 
         public virtual void WritePixel(PixelBufferCoordinate position, in Pixel pixel)

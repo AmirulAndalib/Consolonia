@@ -14,21 +14,6 @@ namespace Consolonia.Core.Infrastructure
     /// </summary>
     public interface IConsole : IConsoleOutput
     {
-        /// <summary>
-        ///     Does this support detection of Alt key by itself
-        /// </summary>
-        bool SupportsAltSolo { get; }
-
-        /// <summary>
-        ///     Does this support mouse input
-        /// </summary>
-        bool SupportsMouse { get; }
-
-        /// <summary>
-        ///     Does this support mouse move input
-        /// </summary>
-        bool SupportsMouseMove { get; }
-
         event Action Resized;
 
         event Action<Key, char, RawInputModifiers, bool, ulong, bool> KeyEvent;
